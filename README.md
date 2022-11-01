@@ -9,3 +9,4 @@ Mecánicas básicas programadas en C# para unity 3D
 - Salto del personaje con Gravedad 
 - Sistema de diálogos
 - Seguimiento de objetos 2D para parecer 3D
+- Disparo y recepción de disparo
