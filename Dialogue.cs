@@ -13,38 +13,64 @@ public class Dialogue : MonoBehaviour
     private float typingTime = 0.05f;
 
     private bool isPlayerInRange;
-    private bool didDIalogueStart;
+    private bool didDialogueStart;
     private int lineIndex;
 
 
     void Update()
     {
-        if (isPlayerInRange && Input.GetButton("Fire1"))
+        if (isPlayerInRange && Input.GetButtonDown("Fire1"))
         {
-            if (!didDIalogueStart)
+            if (!didDialogueStart)
             {
                 StartDialogue();
+            }
+            else if (dialogueText.text == dialogueLines[lineIndex])
+            {
+                NextDialogueLine();
+            }
+            else
+            {
+                StopAllCoroutines();
+                dialogueText.text = dialogueLines[lineIndex];
 
             }
         }
     }
 
+
     private void StartDialogue()
     {
-        didDIalogueStart = true;
+        didDialogueStart = true;
         dialoguePanel.SetActive(true);
         dialogueMark.SetActive(false);
         lineIndex = 0;
+        Time.timeScale = 0f;
         StartCoroutine(ShowLine());
     }
 
+    private void NextDialogueLine()
+    {
+        lineIndex++;
+        if (lineIndex < dialogueLines.Length)
+        {
+            StartCoroutine(ShowLine());
+        }
+        else
+        {
+            didDialogueStart = false;
+            dialoguePanel.SetActive(false);
+            dialogueMark.SetActive(true);
+            Time.timeScale = 1f;
+        }
+    }
     private IEnumerator ShowLine()
     {
         dialogueText.text = string.Empty;
-        foreach(char ch in dialogueLines[lineIndex])
+        foreach (char ch in dialogueLines[lineIndex])
         {
             dialogueText.text += ch;
-            yield return new WaitForSeconds(typingTime);
+            yield return new WaitForSecondsRealtime(typingTime);
         }
     }
 
